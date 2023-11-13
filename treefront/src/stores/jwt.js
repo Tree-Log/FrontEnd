@@ -15,13 +15,14 @@ export const useJWTStore = defineStore('jwtToken', () => {
             }
         )
         .then((response) => {
-            jwtToken = response.data.token
+            console.log(response)
+            jwtToken.value = response.data.token
+            console.log(jwtToken.value);
         })
         .catch((e) => {
             console.log(e);
         })
   }
 
-
-  return { count, refreshToken, loginApi }
+  return { jwtToken, refreshToken, loginApi }
 })
