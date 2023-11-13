@@ -1,9 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "@/views/Home.vue";
-import Board from "@/views/Board.vue";
+import Board from "@/views/Board/Board.vue";
 import Login from "@/views/Login.vue";
 import Profile from "@/views/Profile.vue";
 import Regist from "@/views/Regist.vue";
+import PostCreate from "@/views/Board/PostCreate.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,6 +19,16 @@ const router = createRouter({
       name: "board",
       component: Board,
     },
+    {
+      path: "/board/create",
+      name: "create",
+      component: PostCreate,
+    },
+    // {
+    //   path: "/board/detail",
+    //   name: "detail",
+    //   component: PostDetail,
+    // },
     {
       path: "/login",
       name: "login",
