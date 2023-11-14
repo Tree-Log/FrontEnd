@@ -22,5 +22,9 @@ export const useJWTStore = defineStore('jwtToken', () => {
         })
   }
 
-  return { jwtToken, refreshToken, loginApi }
+  function getJwtToken () {
+    return jwtToken.value;
+  }
+
+  return { jwtToken, refreshToken, loginApi, getJwtToken }
 })

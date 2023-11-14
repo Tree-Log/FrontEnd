@@ -1,6 +1,8 @@
 <template>
     <div>
-        <button class="login-button" @click="login">getUserinfo</button>
+        <router-link to="login">login</router-link>
+        <br>
+        <button class="login-button" @click="onclick">getUserinfo</button>
         {{ user }}
     </div>
 </template>
@@ -10,6 +12,9 @@ import { useUserStore } from '../stores/user';
 const userStore = useUserStore();
 const {user, getUserInfo} = useUserStore();
 
+const onclick = () => {
+    getUserInfo();
+}
 
 </script>
 
