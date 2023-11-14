@@ -7,7 +7,7 @@
         <label>password</label> <br>
         <input v-model="password" type="text" />
         <br>
-        <button class="login-b₩utton" @click="login">login</button>
+        <button class="login-button" @click="login">login</button>
     </div>
 </template>
 
