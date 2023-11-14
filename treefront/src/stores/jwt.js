@@ -15,9 +15,7 @@ export const useJWTStore = defineStore('jwtToken', () => {
             }
         )
         .then((response) => {
-            console.log(response)
             jwtToken.value = response.data.token
-            console.log(jwtToken.value);
         })
         .catch((e) => {
             console.log(e);
