@@ -7,10 +7,8 @@ export const useUserStore = defineStore("user", () => {
   const user = ref({});
   
   const getUserInfo = () => {
-    const {getJwtToken} = useJWTStore();
-    const jwtToken = getJwtToken();
-
-
+    const jwtToken = localStorage.getItem("jwtToken");
+    console.log(jwtToken);
     axios
     .get(
       "http://localhost:8080/auth",
@@ -22,6 +20,7 @@ export const useUserStore = defineStore("user", () => {
     )
     .then((response) =>{
         user.value = response.data
+        localStorage.setItem("user",JSON.stringify(user.value))
     })
     .catch((e) => {
         console.log(e);
