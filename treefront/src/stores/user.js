@@ -5,15 +5,17 @@ import axios from "axios";
 
 export const useUserStore = defineStore("user", () => {
   const user = ref({});
-  const {jwtToken} = useJWTStore();
-
+  
   const getUserInfo = () => {
+    const {getJwtToken} = useJWTStore();
+    const jwtToken = getJwtToken();
+
     axios
     .get(
       "http://localhost:8080/auth",
       {
         headers: {
-          Authorization : `Bearer ${jwtToken.value}`
+          Authorization : `Bearer ${jwtToken}`
         },
       }
     )

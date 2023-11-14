@@ -8,6 +8,8 @@
         <input v-model="password" type="text" />
         <br>
         <button class="login-button" @click="login">login</button>
+        <br>
+        <router-link to="profile">profile</router-link>
     </div>
 </template>
 
