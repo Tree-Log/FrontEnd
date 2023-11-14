@@ -39,14 +39,21 @@
 
 <script setup>
 import { getAllPostsPromise } from "@/utils/postapi.js";
-import { onMounted, transformVNodeArgs } from "vue";
-import { ref } from "vue";
+import { ref, onMounted, onUpdated, nextTick } from "vue";
 
 const posts = ref([]);
-onMounted(() => {
+
+const fetchData = () => {
   getAllPostsPromise().then((data) => {
     posts.value = data;
   });
+};
+
+onMounted(() => {
+  fetchData();
+});
+nextTick(() => {
+  fetchData();
 });
 </script>
 
