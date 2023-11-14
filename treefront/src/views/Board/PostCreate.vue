@@ -24,16 +24,34 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { createPost } from "@/utils/postapi.js";
+import { saveFile } from "@/utils/fileapi.js";
 
 const router = useRouter();
 
 const title = ref("");
 const content = ref("");
 const category = ref("");
+const fileIds = ref([]);
 const images = ref([]);
 
 const imageUpload = (event) => {
   const files = event.target.files;
+  const formData = new FormData();
+
+  for (const file of files) {
+    formData.append("files", file);
+  }
+
+  saveFile(formData)
+    .then((data) => {
+      console.log(data);
+      fileIds.push(data);
+      console.log(fileIds.value);
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+
   images.value = Array.from(files);
 };
 
