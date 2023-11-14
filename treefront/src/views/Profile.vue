@@ -8,12 +8,15 @@
 </template>
 
 <script setup>
+import {computed} from 'vue';
 import { useUserStore } from '../stores/user';
 const userStore = useUserStore();
-const {user, getUserInfo} = useUserStore();
+
+const user = computed(()=>userStore.user);
+
 
 const onclick = () => {
-    getUserInfo();
+    userStore.getUserInfo();
 }
 
 </script>

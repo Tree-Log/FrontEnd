@@ -10,6 +10,7 @@ export const useUserStore = defineStore("user", () => {
     const {getJwtToken} = useJWTStore();
     const jwtToken = getJwtToken();
 
+
     axios
     .get(
       "http://localhost:8080/auth",
