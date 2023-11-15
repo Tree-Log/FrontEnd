@@ -18,9 +18,7 @@ function loginApi(email, password) {
             });
     });
 };
-function getUserInfo() {
-    const jwtToken = localStorage.getItem("jwtToken");
-    console.log(jwtToken);
+function getUserInfo(jwtToken) {
     return new Promise((resolve, reject) => {
         axios
             .get("http://localhost:8080/auth", {
@@ -51,4 +49,5 @@ function registApi(user) {
         });
     });
 };
+
 export { loginApi, getUserInfo, registApi };
