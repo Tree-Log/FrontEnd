@@ -5,16 +5,15 @@ import axios from "axios";
 
 export const useUserStore = defineStore("user", () => {
   const user = ref({});
-  
+
   const getUserInfo = () => {
     const jwtToken = localStorage.getItem("jwtToken");
     console.log(jwtToken);
+
     axios
-    .get(
-      "http://localhost:8080/auth",
-      {
+      .get("http://localhost:8080/auth", {
         headers: {
-          Authorization : `Bearer ${jwtToken}`
+          Authorization: `Bearer ${jwtToken}`,
         },
       }
     )
@@ -24,8 +23,8 @@ export const useUserStore = defineStore("user", () => {
     })
     .catch((e) => {
         console.log(e);
-    })
-  }
+      });
+  };
 
-  return {user, getUserInfo}
-})
+  return { user, getUserInfo };
+});
