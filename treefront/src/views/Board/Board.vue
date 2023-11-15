@@ -38,7 +38,7 @@
 </template>
 
 <script setup>
-import { getAllPostsPromise } from "@/utils/postapi.js";
+import { getAllPostsPromise } from "@/utils/api/postapi.js";
 import { ref, onMounted, onUpdated, nextTick } from "vue";
 
 const posts = ref([]);

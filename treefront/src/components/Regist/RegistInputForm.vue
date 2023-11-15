@@ -20,10 +20,12 @@ const type = computed(() => {
     switch (props.from) {
         case 'email':
             return formStore.email;
-        case 'password':
-            return formStore.password;
         case 'name':
             return formStore.name;
+        case 'nickname':
+            return formStore.nickName;
+        case 'password':
+            return formStore.password;
         case 'passwordCheck':
             return formStore.passwordCheck;
         default:
@@ -35,13 +37,11 @@ const type = computed(() => {
 <style scoped>
 .input-container {
     width: 400px;
-    height: 105px;
-    padding-bottom: 0px;
+    height: 100px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-
 .name {
     width: 350px;
     text-align: left;
@@ -49,18 +49,15 @@ const type = computed(() => {
     padding-bottom: 7px;
     color: #999999;
 }
-
 .text-input {
     width: 340px;
     height: 40px;
     padding-left: 10px;
     font-size: 12px;
     font: #999999;
-
     border: solid #999999 1px;
     border-radius: 5px;
 }
-
 .message {
     width: 350px;
     text-align: left;
@@ -68,4 +65,5 @@ const type = computed(() => {
     font-size: 12px;
     margin-top: 7px;
     color: #999999;
-}</style>
+}
+</style>

@@ -23,8 +23,8 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { createPost } from "@/utils/postapi.js";
-import { saveFile } from "@/utils/fileapi.js";
+import { createPost } from "@/utils/api/postapi.js";
+import { saveFile } from "@/utils/api/fileapi.js";
 
 const router = useRouter();
 

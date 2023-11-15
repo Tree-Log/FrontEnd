@@ -5,13 +5,33 @@
         </div>
         <div class="button-container">
                 <RouterLink to="/board" class="nav-link">Board</RouterLink> 
-                <RouterLink to="/login" class="nav-link">Login</RouterLink> 
-                <RouterLink to="/profile" class="nav-link">Profile</RouterLink>
+                <RouterLink v-if="!isLoggedIn" to="/login" class="nav-link">Login</RouterLink> 
+                <RouterLink v-if="isLoggedIn" to="/profile" class="nav-link">Profile</RouterLink>
+                <a v-if="isLoggedIn" class="nav-link" @click="logout">Logout</a> 
         </div>
     </div>
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue';
+import { getUserInfo } from '../utils/api/userapi';
+
+const isLoggedIn = ref(false);
+
+onMounted(() => {
+    const jwtToken = localStorage.getItem("jwtToken");
+    if (jwtToken) {
+        getUserInfo(jwtToken)
+        .then(() => {
+            isLoggedIn.value = true;
+        })
+    }
+})
+
+const logout = () => {
+    localStorage.clear();
+    isLoggedIn.value = false;
+}
 
 </script>
 
@@ -44,6 +64,7 @@
   text-decoration: none; 
 }
 .nav-link:hover {
+    cursor: pointer;
   text-decoration: underline;
 }
 </style>

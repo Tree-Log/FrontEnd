@@ -1,10 +1,14 @@
 <template>
     <div class="body">
-        <div class="login-container">
+        <div class="regist-container">
             <div class="title">Regist</div>
                 <RegistInputForm
                 from="name"
                 @send-data="nameInput"
+                />
+                <RegistInputForm
+                from="nickname"
+                @send-data="nickNameInput"
                 />
                 <RegistInputForm
                 from="email"
@@ -18,40 +22,55 @@
                 from="passwordCheck"
                 @send-data="passwordCheckInput"
                 />
-                <input type="date">
+                <RegionInputForm
+                @send-data="regionInput"/>
+                <DateInputForm
+                @send-data="birthdayInput"/>
 
-                <!-- 지역, 생일, 프로필 이미지 -->
-                <div class="blank">
-                </div>
-                <button class="button login-button" @click="login">regist</button>
-                <br>
-                <router-link to="profile">profile</router-link>
-                <router-link to="/">home</router-link>
+                <!-- 프로필 이미지 -->
+                <div class="blank"></div>
+                <button class="button" @click="regist">regist</button>
+                <RouterLink to="/" class="link">Home</RouterLink> 
         </div>
     </div>
 </template>
 
 <script setup>
 import RegistInputForm from "../components/Regist/RegistInputForm.vue";
+import DateInputForm from "../components/Regist/DateInputForm.vue";
+import RegionInputForm from "../components/Regist/RegionInputForm.vue";
+import errorHandle from "../utils/errorHandleUtil";
 
-import { useRouter } from "vue-router";
 import { ref } from "vue"
+import { useRouter } from "vue-router";
 import { useFormStore } from '@/stores/formStore';
-import { loginApi, getUserInfo } from "@/utils/userapi";
-import { checkEmail, checkLength, checkDoublePassword } from "../utils/inputcheck/LoginUtil";
-import { Length_ERROR, EMAIL_ERROR,PASSWORD_ERROR } from "../utils/ErrorMessages";
-import { ERROR_COLOR } from "../utils/Color";
+import { registApi } from "@/utils/api/userapi";
+import { checkEmail, checkLength, checkDoublePassword } from "../utils/inputcheck/userInputUtil";
+import { Length_ERROR, EMAIL_ERROR,PASSWORD_ERROR } from "../utils/errorMessageUtil";
+import { ERROR_COLOR } from "../utils/colorCodeUtil";
 
+const router = useRouter();
 const formStore = useFormStore();
 
 const emailValue = ref("");
-const passwordValue = ref("");
 const nameValue = ref("");
+const nickNameValue = ref("");
+const passwordValue = ref("");
 const passwordCheckValue = ref("");
+const regionMainValue = ref("");
+const regionSubValue = ref("");
+const birthdayValue = ref('1996-12-05');
 
 const emailCheck = ref(false);
+const passwordLength = ref(false);
 const passwordCheck = ref(false);
 
+const nameInput = (inputValue) => {
+    nameValue.value = inputValue;
+};
+const nickNameInput = (inputValue) => {
+    nickNameValue.value = inputValue;
+};
 const emailInput = (inputValue) => {
     emailValue.value = inputValue;
     if (checkEmail(emailValue.value)) {
@@ -62,17 +81,18 @@ const emailInput = (inputValue) => {
         formStore.setEmail(EMAIL_ERROR, ERROR_COLOR);
         emailCheck.value = false;
     }
-}
+};
 const passwordInput = (inputValue) => {
     passwordValue.value = inputValue;
     if (checkLength(passwordValue.value, 14)) {
         formStore.setPassword("", "");
+        passwordLength.value = true;
     }
     else {
         formStore.setPassword(Length_ERROR, ERROR_COLOR);
-        passwordCheck.value = false;
+        passwordLength.value = false;
     }
-}
+};
 const passwordCheckInput = (inputValue) => {
     passwordCheckValue.value = inputValue;
     if (checkDoublePassword(passwordValue.value, passwordCheckValue.value)) {
@@ -83,12 +103,39 @@ const passwordCheckInput = (inputValue) => {
         formStore.setPasswordCheck(PASSWORD_ERROR, ERROR_COLOR);
         passwordCheck.value = false;
     }
-}
-const nameInput = (inputValue) => {
-    nameValue.value = inputValue;
-}
-const login = () => {
+};
+const regionInput = (selectedCity, selectedSubCity) => {
+    regionMainValue.value = selectedCity;
+    regionSubValue.value = selectedSubCity;
+};
+const birthdayInput = (inputValue) => {
+    birthdayValue.value = inputValue;
+};
 
+const regist = () => {
+    if (nameValue.value && nickNameValue.value && birthdayValue.value && emailCheck.value && passwordLength.value && passwordCheck.value) {
+        const user = {
+            name: nameValue.value,
+            email: emailValue.value,
+            nickname: nickNameValue.value,
+            password: passwordValue.value,
+            region: regionMainValue.value,
+            birthDay: birthdayValue.value,
+        };
+        registApi(user)
+        .then(() => {
+            console.log("got passed");
+            alert("회원가입 되었습니다!");
+            router.push("/login");
+        })
+        .catch((e) => {
+            const errorCode = e.response.status;
+            errorHandle(errorCode);
+        })
+    }
+    else {
+        alert("제대로 입력하세요");
+    }
 }
 
 </script>
@@ -101,35 +148,52 @@ const login = () => {
     align-items: center;
     justify-content: center;
 }
-
-.login-container {
+.regist-container {
     width: 500px;
-    height: 700px;
+    height: 70%;
+    min-height: 600px;
     padding-top: 100px;
+    padding-top: 7%;
+    padding-bottom: 5%;
     display: flex;
     flex-direction: column;
     align-items: center;
     border-radius: 5px;
     border: solid 1px rgba(150, 150, 150, 0.6);
 }
-
 .title {
     width: 355px;
     height: 43px;
     font-size: 20px;
     margin-bottom: 20px;
 }
-
-.login-button {
+.blank{
+    height: 3%;
+    min-height: 10px;
+}
+.button {
     width: 355px;
     height: 43px;
     padding-left: 10px;
     margin-top: 5px;
-    margin-bottom: 0;
-    background-color: darkgreen;
-    border-radius: 5px;
-    border: solid darkgreen 1px;
+    margin-bottom: 15px;
     font-size: 14px;
-    color: white;
+    border-radius: 5px;
+    border: 0;
+    background-color: darkgreen;
+        color: white;
+}
+.button:hover{
+    background-color:rgba(255, 192, 0);
+    color: darkgreen;
+    cursor: pointer;
+}
+.link {
+  font-size: 14px;
+  color: rgba(2, 2, 2, 0.57);
+  text-decoration: none; 
+}
+.link:hover {
+  text-decoration: underline;
 }
 </style>
