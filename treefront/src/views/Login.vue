@@ -3,19 +3,11 @@
         <div class="login-container">
             <div class="title">Login</div>
             <InputForm
-            :name="emailProp.name"
-            :type="emailProp.type"
-            :placeholder="emailProp.placeholder"
-            :message="emailProp.message"
-            :color="emailProp.color"
+            from="email"
             @send-data="emailInput"
             />
             <InputForm
-            :name="passwordProp.name"
-            :type="passwordProp.type"
-            :placeholder="passwordProp.placeholder"
-            :message="passwordProp.message"
-            :color="passwordProp.color"
+            from="password"
             @send-data="passwordInput"
             />
             <div class="blank">
@@ -32,26 +24,74 @@
 </template>
 
 <script setup>
-import {useJWTStore} from "@/stores/jwt.js"
-import { ref } from "vue"
-import { useRouter } from "vue-router";
 import InputForm from "../components/Login/InputForm.vue";
 
-const jwtStore = useJWTStore();
-const email = ref("");
-const password = ref("");
+import { useRouter } from "vue-router";
+import { ref } from "vue"
+import { useFormStore } from '@/stores/formStore';
+import { loginApi, getUserInfo } from "@/utils/userapi";
+import { checkEmail, checkLength } from "../utils/inputcheck/LoginUtil";
+import { Length_ERROR, EMAIL_ERROR, EMAIL_CHECK, PASSWORD_CHECK } from "../utils/ErrorMessages";
+import { ERROR_COLOR } from "../utils/Color";
 
-const emailProp = ref({ name: "email", type: "text", placeholder: "이메일을 입력해 주세요", message: "dkrl", color: "" });
-const passwordProp = ref({ name: "password", type: "password", placeholder: "비밀번호를 입력해 주세요", message: "dd", color: "" });
+const router = useRouter();
+const formStore = useFormStore();
+const emailValue = ref("");
+const passwordValue = ref("");
+const emailCheck = ref(false);
+const passwordCheck = ref(false);
 
 const emailInput = (inputValue) => {
-    email.value = inputValue;
+    emailValue.value = inputValue;
+    if (checkEmail(emailValue.value)) {
+        formStore.setEmail("", "");
+        emailCheck.value = true;
+    }
+    else {
+        formStore.setEmail(EMAIL_ERROR, ERROR_COLOR);
+        emailCheck.value = false;
+    }
 }
 const passwordInput = (inputValue) => {
-    password.value = inputValue;
+    passwordValue.value = inputValue;
+    if (checkLength(passwordValue.value, 14)) {
+        formStore.setPassword("", "");
+        passwordCheck.value = true;
+    }
+    else {
+        formStore.setPassword(Length_ERROR, ERROR_COLOR);
+        passwordCheck.value = false;
+    }
 }
 const login = () => {
-    jwtStore.loginApi(email.value, password.value);
+    localStorage.clear();
+    if (emailCheck.value && passwordCheck.value) {
+        loginApi(emailValue.value, passwordValue.value)
+            .then((data) => {
+                localStorage.setItem("jwtToken", data.token);
+                getUserInfo()
+                    .then(() => {
+                        alert("로그인 되었습니다");
+                        router.push("/");
+                    });
+            })
+            .catch((e) => {
+                const errorCode = e.response.status;
+                errorHandle(errorCode);
+        })
+    }
+    else {
+        alert("열받게 하지 말고 제대로 입력하세요"); 
+    }
+}
+
+const errorHandle = (errorCode) => {
+    switch (errorCode) {
+        case 411: // email이 존재하지 않음
+            alert(EMAIL_CHECK);
+        case 414: // 비번 틀림
+            alert(PASSWORD_CHECK);
+    }
 }
 
 </script>
@@ -66,7 +106,8 @@ const login = () => {
 }
 .login-container{
     width: 500px;
-    height: 700px;
+    height: 70%;
+    min-height: 600px;
     padding-top: 100px;
     display: flex;
     flex-direction: column;
@@ -78,7 +119,7 @@ const login = () => {
     width: 355px;
     height: 43px;
     font-size: 20px;
-    margin-bottom: 60px;
+    margin-bottom: 50px;
 }
 .button{
     width: 355px;
@@ -104,6 +145,6 @@ const login = () => {
     color: white;
 }
 .blank{
-    height: 70px;
+    height: 50px;
 }
 </style>
