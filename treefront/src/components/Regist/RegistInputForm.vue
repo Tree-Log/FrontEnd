@@ -1,10 +1,11 @@
 <template>
     <div class="input-container">
-      <div class="name">{{ type.name }}</div>
-      <input v-model="inputValue" class="text-input" :type="type.type" :placeholder="type.placeholder" @change="$emit('send-data', inputValue)"/>
-      <div class="message" :style="{color: type.color}">{{ type.message }}&nbsp;</div>
+        <div class="name">{{ type.name }}</div>
+        <input v-model="inputValue" class="text-input" :type="type.type" :placeholder="type.placeholder"
+            @change="$emit('send-data', inputValue)" />
+        <div class="message" :style="{ color: type.color }">{{ type.message }}&nbsp;</div>
     </div>
-  </template>
+</template>
 
 <script setup>
 import { ref, computed, defineProps } from 'vue';
@@ -35,18 +36,20 @@ const type = computed(() => {
 .input-container {
     width: 400px;
     height: 105px;
-    padding-bottom: 20px;
+    padding-bottom: 0px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-.name{
+
+.name {
     width: 350px;
     text-align: left;
     font-size: 14px;
     padding-bottom: 7px;
     color: #999999;
 }
+
 .text-input {
     width: 340px;
     height: 40px;
@@ -54,15 +57,15 @@ const type = computed(() => {
     font-size: 12px;
     font: #999999;
 
-    border : solid #999999 1px;
-    border-radius:  5px;
+    border: solid #999999 1px;
+    border-radius: 5px;
 }
-.message{
+
+.message {
     width: 350px;
     text-align: left;
     margin-left: 5px;
     font-size: 12px;
     margin-top: 7px;
     color: #999999;
-}
-</style>
+}</style>

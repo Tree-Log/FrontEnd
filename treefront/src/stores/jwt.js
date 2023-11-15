@@ -5,23 +5,7 @@ import axios from "axios";
 export const useJWTStore = defineStore("jwtToken", () => {
   const jwtToken = ref("");
   const refreshToken = ref("");
-  const loginApi = (email, password) => {
-    axios
-        .post(
-            "http://localhost:8080/login",
-            {
-                email:email,
-                password:password
-            }
-        )
-        .then((response) => {
-            jwtToken.value = response.data.token
-            localStorage.setItem("jwtToken",jwtToken.value);
-        })
-        .catch((e) => {
-            console.log(e);
-        })
-  }
+
   
   function getJwtToken() {
     return jwtToken.value;

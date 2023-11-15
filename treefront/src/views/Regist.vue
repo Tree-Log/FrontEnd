@@ -2,37 +2,93 @@
     <div class="body">
         <div class="login-container">
             <div class="title">Regist</div>
-            <InputForm :name="emailProp.name" :type="emailProp.type" :placeholder="emailProp.placeholder"
-                :message="emailProp.message" :color="emailProp.color" @send-data="emailInput" />
-            <InputForm :name="passwordProp.name" :type="passwordProp.type" :placeholder="passwordProp.placeholder"
-                :message="passwordProp.message" :color="passwordProp.color" @send-data="passwordInput" />
-            <button class="login-button" @click="login">login</button>
-            <br>
-            <router-link to="profile">profile</router-link>
+                <RegistInputForm
+                from="name"
+                @send-data="nameInput"
+                />
+                <RegistInputForm
+                from="email"
+                @send-data="emailInput"
+                />
+                <RegistInputForm
+                from="password"
+                @send-data="passwordInput"
+                />
+                <RegistInputForm
+                from="passwordCheck"
+                @send-data="passwordCheckInput"
+                />
+                <input type="date">
+
+                <!-- 지역, 생일, 프로필 이미지 -->
+                <div class="blank">
+                </div>
+                <button class="button login-button" @click="login">regist</button>
+                <br>
+                <router-link to="profile">profile</router-link>
+                <router-link to="/">home</router-link>
         </div>
     </div>
 </template>
 
 <script setup>
-import { useJWTStore } from "@/stores/jwt.js"
+import RegistInputForm from "../components/Regist/RegistInputForm.vue";
+
+import { useRouter } from "vue-router";
 import { ref } from "vue"
-import InputForm from "../components/Login/InputForm.vue";
+import { useFormStore } from '@/stores/formStore';
+import { loginApi, getUserInfo } from "@/utils/userapi";
+import { checkEmail, checkLength, checkDoublePassword } from "../utils/inputcheck/LoginUtil";
+import { Length_ERROR, EMAIL_ERROR,PASSWORD_ERROR } from "../utils/ErrorMessages";
+import { ERROR_COLOR } from "../utils/Color";
 
-const jwtStore = useJWTStore();
-const email = ref("");
-const password = ref("");
+const formStore = useFormStore();
 
-const emailProp = ref({ name: "email", type: "text", placeholder: "이메일을 입력해 주세요", message: "dkrl", color: "" });
-const passwordProp = ref({ name: "password", type: "password", placeholder: "비밀번호를 입력해 주세요", message: "dd", color: "" });
+const emailValue = ref("");
+const passwordValue = ref("");
+const nameValue = ref("");
+const passwordCheckValue = ref("");
+
+const emailCheck = ref(false);
+const passwordCheck = ref(false);
 
 const emailInput = (inputValue) => {
-    email.value = inputValue;
+    emailValue.value = inputValue;
+    if (checkEmail(emailValue.value)) {
+        formStore.setEmail("", "");
+        emailCheck.value = true;
+    }
+    else {
+        formStore.setEmail(EMAIL_ERROR, ERROR_COLOR);
+        emailCheck.value = false;
+    }
 }
 const passwordInput = (inputValue) => {
-    password.value = inputValue;
+    passwordValue.value = inputValue;
+    if (checkLength(passwordValue.value, 14)) {
+        formStore.setPassword("", "");
+    }
+    else {
+        formStore.setPassword(Length_ERROR, ERROR_COLOR);
+        passwordCheck.value = false;
+    }
+}
+const passwordCheckInput = (inputValue) => {
+    passwordCheckValue.value = inputValue;
+    if (checkDoublePassword(passwordValue.value, passwordCheckValue.value)) {
+        formStore.setPasswordCheck("", "");
+        passwordCheck.value = true;
+    }
+    else {
+        formStore.setPasswordCheck(PASSWORD_ERROR, ERROR_COLOR);
+        passwordCheck.value = false;
+    }
+}
+const nameInput = (inputValue) => {
+    nameValue.value = inputValue;
 }
 const login = () => {
-    jwtStore.loginApi(email.value, password.value);
+
 }
 
 </script>
