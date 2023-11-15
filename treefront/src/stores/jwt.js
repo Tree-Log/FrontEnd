@@ -7,18 +7,22 @@ export const useJWTStore = defineStore("jwtToken", () => {
   const refreshToken = ref("");
   const loginApi = (email, password) => {
     axios
-      .post("http://localhost:8080/login", {
-        email: email,
-        password: password,
-      })
-      .then((response) => {
-        jwtToken.value = response.data.token;
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
-
+        .post(
+            "http://localhost:8080/login",
+            {
+                email:email,
+                password:password
+            }
+        )
+        .then((response) => {
+            jwtToken.value = response.data.token
+            localStorage.setItem("jwtToken",jwtToken.value);
+        })
+        .catch((e) => {
+            console.log(e);
+        })
+  }
+  
   function getJwtToken() {
     return jwtToken.value;
   }
