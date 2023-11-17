@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h2>게시물 등록</h2>
+  <div class="main-container">
+    <div class="title">Post</div>
     <label for="title">제목</label><br />
     <input type="text" name="title" v-model="title" /><br />
     <label for="content">내용</label><br />
@@ -71,4 +71,25 @@ const create = async () => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.main-container{
+    width: 100%;
+    height: 100vh;
+    padding-top: 10%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: royalblue;
+}
+.title{
+  width: 55%;
+  height: 40px;
+  padding-left: 10px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: green;
+}
+
+</style>
